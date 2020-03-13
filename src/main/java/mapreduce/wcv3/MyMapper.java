@@ -38,7 +38,7 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 			String line = tokenizer.nextToken().toLowerCase(); // grab the first token
 			//line=stemmer.stem(line).toLowerCase(); // lowercase all text in inputsplit
 			line = line.replaceAll("[^a-zA-Z0-9\\s]", ""); // removes all special characters and punctuation marks
-			line = removeStopwords(line); // stopword removal and stemming			
+			line = removeStopwords(line); // stopword removal and stemming	
 			int sep = line.indexOf(' ');
 			if(!CheckStopwords(line)){
 			this._key.set((sep == -1) ? line: line.substring(0, line.indexOf(' ')));
@@ -64,7 +64,8 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 		StringBuilder builder = new StringBuilder();
 		for(String word: allWords) {
 			if(!stopwords.contains(word)) {
-				builder.append(stemmer.stem(word)); // stems the word
+				word = stemmer.stem(word); // stems the word
+				builder.append(word);
 				builder.append(' ');
 			}
 		}
