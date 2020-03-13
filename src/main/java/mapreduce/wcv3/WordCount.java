@@ -23,8 +23,7 @@ public class WordCount extends Configured implements Tool {
 		// Remove these lines when executing your code against the cluster.
 		myconf.set("mapreduce.framework.name", "local");
         myconf.set("fs.defaultFS", "file:///");
-        myconf.set("textinputformat.record.delimiter", "\\n[[");
-
+        myconf.set("textinputformat.record.delimiter", "\n[[");
 		Job job = Job.getInstance(myconf);
 		job.setJobName("MyWordCount(" + args[0] + ")");
 		job.setJarByClass(WordCount.class);
