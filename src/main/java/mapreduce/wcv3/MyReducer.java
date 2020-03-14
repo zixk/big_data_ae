@@ -6,14 +6,17 @@ import java.util.Iterator;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 public class MyReducer extends Reducer<Text, Text, Text, Text> {
 	private Text _value = new Text();
+	 private MultipleOutputs output_files;
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context
 			context) throws IOException, InterruptedException {
 		int splitIndex = key.toString().indexOf(":");
 		String Tag=key.toString().substring(0,splitIndex);
+		output_files=new MultipleOutputs(context);
 	    
 		
 		if(Tag.equals("L")) {
@@ -23,7 +26,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 			sum += Integer.parseInt(value.toString());
 		}
 		this._value.set(Integer.toString(sum));
-		context.write(key, this._value);
+		output_files.write("Documentlength.txt",key, this._value);
 	}
 		
 		if(Tag.equals("TF")) {
@@ -35,7 +38,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 				doc_list += value.toString()+";";
 			}
 			this._value.set(doc_list);
-			context.write(key, this._value);
+			output_files.write("Termfrequency.txt",key, this._value);
              //output：<"MapReduce","0.txt:1,1.txt:1,2.txt:1">
 }
 }

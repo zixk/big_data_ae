@@ -8,7 +8,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import org.apache.hadoop.mapreduce.Reducer;
-public  class CustomCombiner extends Reducer<Text, Text, Text, Text>{
+public  class MyCombiner extends Reducer<Text, Text, Text, Text>{
 
 	private Text new_value = new Text();
 	@Override
@@ -18,7 +18,7 @@ public  class CustomCombiner extends Reducer<Text, Text, Text, Text>{
 		//key="term:docId",value=list(1,1,1,1);
 		int splitIndex = key.toString().indexOf(":");
 		String Tag=key.toString().substring(0,splitIndex);
-		if(Tag=="TF") {
+		if(Tag.equals("TF")) {
 		int sum = 0;
 		for(Text value : values){
 			

@@ -61,7 +61,7 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, Text> {// accepts
 		}
 		
 		//context.getCounter(Counters.NUM_BYTES).increment(value.getLength());
-		//context.getCounter(Counters.NUM_RECORDS).increment(1);
+		context.getCounter(Counters.NUM_RECORDS).increment(1);
 	}
 	
 	private void loadStopwords() throws IOException{
