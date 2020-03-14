@@ -37,9 +37,9 @@ public class WordCount extends Configured implements Tool {
 		job.setReducerClass(MyReducer.class);
 		job.setCombinerClass(MyCombiner.class);
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
-		//FileOutputFormat.setOutputPath(job, new Path(job.getJobName() +"_output"));
-		MultipleOutputs.addNamedOutput(job, "Termfrequency.txt", TextOutputFormat.class, Text.class, Text.class);
-	    MultipleOutputs.addNamedOutput(job, "Documentlength.txt", TextOutputFormat.class, Text.class, Text.class);
+		FileOutputFormat.setOutputPath(job, new Path(job.getJobName() +"_output"));
+		MultipleOutputs.addNamedOutput(job, "Termfrequency", TextOutputFormat.class, Text.class, Text.class);
+	    MultipleOutputs.addNamedOutput(job, "Documentlength", TextOutputFormat.class, Text.class, Text.class);
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 

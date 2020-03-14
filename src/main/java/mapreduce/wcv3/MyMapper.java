@@ -49,11 +49,9 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, Text> {// accepts
 			this._key.set((sep == -1) ? "TF:"+word+","+ key.toString(): "TF:"+word.substring(0, word.indexOf(' '))+","+ key.toString());// a tag is added to the key to differentiate between 2 key-value pairs 
 			
 			this._value.set("1");
-			
 			context.write(this._key, this._value);// emit first k-value pair ({TF:term,doc_id}, 1)
 			this._key2.set("L:"+key.toString().toString()); // document id with L tag to differentiate between 2 k-value pairs
 			this._value2.set("1");// 
-			
 			context.write(this._key2, this._value2);// emit the second k-value pair ({L:doc_id},1)// i did this so the combiner can deal with all situation
 			
 			//context.getCounter(Counters.NUM_LINES).increment(1);

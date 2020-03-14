@@ -26,7 +26,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 			sum += Integer.parseInt(value.toString());
 		}
 		this._value.set(Integer.toString(sum));
-		output_files.write("Documentlength.txt",key, this._value);
+		output_files.write("Documentlength",key, this._value);
 	}
 		
 		if(Tag.equals("TF")) {
@@ -38,7 +38,7 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 				doc_list += value.toString()+";";
 			}
 			this._value.set(doc_list);
-			output_files.write("Termfrequency.txt",key, this._value);
+			output_files.write("Termfrequency",key, this._value);
              //output：<"MapReduce","0.txt:1,1.txt:1,2.txt:1">
 }
 }
