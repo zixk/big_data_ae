@@ -23,43 +23,43 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, Text> {// accepts
 	private Text _value2 = new Text();// the second k-value pair
 	
 	private static List<String> stopwords;
-	private PorterStemmer stemmer = new PorterStemmer();
 	
-	public static boolean CheckStopwords(String word) throws IOException {
-		
-		System.out.println();
-				
+	
+   private PorterStemmer stemmer = new PorterStemmer();
+   public static boolean CheckStopwords(String word) throws IOException {
+			
 		return stopwords.contains(word);
 	}
+	
 	
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws
 	IOException, InterruptedException {
 		loadStopwords();
-		StringTokenizer tokenizer = new StringTokenizer(value.toString(), "\n"); // tokenize inputsplit by a newline delimeter
-		int docLength=0; // to keep track the length of a document
+		StringTokenizer tokenizer = new StringTokenizer(value.toString(), " "); // tokenize inputsplit by a space delimeter
+		
 		while (tokenizer.hasMoreTokens()) {
-			String line = tokenizer.nextToken().toLowerCase(); // grab the first token
+			String word = tokenizer.nextToken().toLowerCase(); // grab the first token
 			//line=stemmer.stem(line).toLowerCase(); // lowercase all text in inputsplit
-			line = line.replaceAll("[^a-zA-Z0-9\\s]", ""); // removes all special characters and punctuation marks
-			line = removeStopwords(line); // stopword removal and stemming
-			System.out.println(line);
-			int sep = line.indexOf(' ');
-			if(!CheckStopwords(line)){
-			this._key.set((sep == -1) ? line: line.substring(0, line.indexOf(' ')));
-			//Text outValue=new Text();
-			//outValue.set(key.toString()+","+"1");
-			this._value.set("TF"+key.toString()+","+"1");// a tag is added to the value to differentiate between 2 key-value pairs 
+			word = word.replaceAll("[^a-zA-Z0-9\\s]", ""); // removes all special characters and punctuation marks
+			//line = removeStopwords(line); // stopword removal and stemming
+			//System.out.println(line);
+			int sep = word.indexOf(' ');
+			if(!CheckStopwords(word)){
+			this._key.set((sep == -1) ? "TF:"+word+","+ key.toString(): "TF:"+word.substring(0, word.indexOf(' '))+","+ key.toString());// a tag is added to the key to differentiate between 2 key-value pairs 
 			
-			context.write(this._key, this._value);// emit first k-value pair (term,{docid,1)
-			docLength++; // increment the length of a document per iteration
+			this._value.set("1");
+			
+			context.write(this._key, this._value);// emit first k-value pair ({TF:term,doc_id}, 1)
+			this._key2.set("L:"+key.toString().toString()); // document id with L tag to differentiate between 2 k-value pairs
+			this._value2.set("1");// 
+			
+			context.write(this._key2, this._value2);// emit the second k-value pair ({L:doc_id},1)// i did this so the combiner can deal with all situation
+			
 			//context.getCounter(Counters.NUM_LINES).increment(1);
 			}
 		}
-		this._key2.set(key.toString()); // docid 
-		this._value2.set("L"+String.valueOf(docLength));// document length+tag to differentiate between 2 k-value pairs
 		
-		context.write(this._key2, this._value2);// emit the second k-value pair
 		//context.getCounter(Counters.NUM_BYTES).increment(value.getLength());
 		//context.getCounter(Counters.NUM_RECORDS).increment(1);
 	}
