@@ -11,12 +11,18 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 public class MyReducer extends Reducer<Text, Text, Text, Text> {
 	private Text _value = new Text();
 	 private MultipleOutputs output_files;
+	 
+	@Override 
+	public void setup(Context context) {
+		output_files=new MultipleOutputs(context);
+	}
+	 
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context
 			context) throws IOException, InterruptedException {
 		int splitIndex = key.toString().indexOf(":");
 		String Tag=key.toString().substring(0,splitIndex);
-		output_files=new MultipleOutputs(context);
+		
 	    
 		
 		if(Tag.equals("L")) {

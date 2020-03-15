@@ -36,12 +36,17 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, Text> {// accepts
 	protected void map(LongWritable key, Text value, Context context) throws
 	IOException, InterruptedException {
 		loadStopwords();
-		StringTokenizer tokenizer = new StringTokenizer(value.toString(), " "); // tokenize inputsplit by a space delimeter
+		String valueAsString = value.toString().toLowerCase();
+		valueAsString = valueAsString.replaceAll("[^a-zA-Z0-9\\s]", " ");
+		valueAsString = valueAsString.replaceAll("\n", " ");
+		valueAsString = removeStopwords(valueAsString);
+		StringTokenizer tokenizer = new StringTokenizer(valueAsString.toString(), " "); // tokenize inputsplit by a space delimeter
 		
 		while (tokenizer.hasMoreTokens()) {
-			String word = tokenizer.nextToken().toLowerCase(); // grab the first token
+			String word = tokenizer.nextToken(); // grab the first token
 			//line=stemmer.stem(line).toLowerCase(); // lowercase all text in inputsplit
-			word = word.replaceAll("[^a-zA-Z0-9\\s]", ""); // removes all special characters and punctuation marks
+			//word = word.replaceAll("[^a-zA-Z0-9\\s]", ""); // removes all special characters and punctuation marks
+			//word = word.replaceAll("\n", "");
 			//line = removeStopwords(line); // stopword removal and stemming
 			//System.out.println(line);
 			int sep = word.indexOf(' ');
@@ -60,6 +65,7 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, Text> {// accepts
 		
 		//context.getCounter(Counters.NUM_BYTES).increment(value.getLength());
 		context.getCounter(Counters.NUM_RECORDS).increment(1);
+		System.out.println(context.getCounter(Counters.NUM_RECORDS).getValue());
 	}
 	
 	private void loadStopwords() throws IOException{
