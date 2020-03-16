@@ -32,10 +32,11 @@ public class WordCount extends Configured implements Tool {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setMapperClass(MyMapper.class);
 		job.setPartitionerClass(MyPartitioner.class);
-		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputKeyClass(MyKey.class);
 		job.setMapOutputValueClass(Text.class);
 		job.setReducerClass(MyReducer.class);
 		job.setCombinerClass(MyCombiner.class);
+		job.setGroupingComparatorClass(MyGroupComparator.class);
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(job.getJobName() +"_output"));
 		MultipleOutputs.addNamedOutput(job, "Termfrequency", TextOutputFormat.class, Text.class, Text.class);
