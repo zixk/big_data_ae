@@ -8,7 +8,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-public class MyReducer extends Reducer<Text, Text, Text, Text> {
+public class MyReducer extends Reducer<MyKey, Text, Text, Text> {
 	private Text _value = new Text();
 	 private MultipleOutputs output_files;
 	 
@@ -18,34 +18,30 @@ public class MyReducer extends Reducer<Text, Text, Text, Text> {
 	}
 	 
 	@Override
-	protected void reduce(Text key, Iterable<Text> values, Context
+	protected void reduce(MyKey key, Iterable<Text> values, Context
 			context) throws IOException, InterruptedException {
-		int splitIndex = key.toString().indexOf(":");
+		int splitIndex = key.term.toString().indexOf(":");
 		String Tag=key.toString().substring(0,splitIndex);
 		
 	    
 		
 		if(Tag.equals("L")) {
-		int sum = 0;
-		for(Text value : values){
-			
-			sum += Integer.parseInt(value.toString());
-		}
-		this._value.set(Integer.toString(sum));
-		output_files.write("Documentlength",key, this._value);
+		
+		
+		output_files.write("Documentlength",new Text(key.term), new Text(key.frequency));
 	}
 		
 		if(Tag.equals("TF")) {
 			
 			//input：<"TF:term",list("doc_id:1","doc_id:1","doc_id:1")>
 			//output：<"TF:term","doc_id:1,doc_id:1,doc_id:1">
-			String doc_list = new String();
-			for(Text value : values){//value="doc_id:1"
-				doc_list += value.toString()+";";
+			//String doc_list = new String();
+			//for(Text value : values){//value="doc_id:1"
+			//	doc_list += value.toString()+";";
+			//this._value.set(doc_list);
+			output_files.write("Termfrequency",new Text(key.term), new Text(key.frequency));
 			}
-			this._value.set(doc_list);
-			output_files.write("Termfrequency",key, this._value);
+			
              //output：<"MapReduce","0.txt:1,1.txt:1,2.txt:1">
-}
 }
 }

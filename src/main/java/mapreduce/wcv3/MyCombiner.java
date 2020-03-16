@@ -8,7 +8,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import org.apache.hadoop.mapreduce.Reducer;
-public  class MyCombiner extends Reducer<Text, Text, Text, Text>{
+public  class MyCombiner extends Reducer<Text, Text, MyKey, Text>{
 
 	private Text new_value = new Text();
 	@Override
@@ -28,8 +28,21 @@ public  class MyCombiner extends Reducer<Text, Text, Text, Text>{
 		int splitIndex2 = key.toString().indexOf(",");
 		new_value.set(key.toString().substring(splitIndex2+1)+":"+sum);
 		key.set(key.toString().substring(0,splitIndex2));
-		context.write(key, new_value);
+		MyKey compositeKey= new MyKey(key.toString(),new_value.toString());
+		context.write(compositeKey, new Text());
          //output:<key,value>----<"term","docId:sum">
-	}	
+	}
+		
+		else
+		{
+			int sum = 0;
+			for(Text value : values){
+				
+				sum += Integer.parseInt(value.toString());
+			}
+			
+			MyKey compositeKey= new MyKey(key.toString(),Integer.toString(sum));
+			context.write(compositeKey, new Text());
+		}
 }
 }

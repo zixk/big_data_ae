@@ -4,12 +4,22 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Partitioner;
 
-public class MyPartitioner extends Partitioner<Text, Text> {
+public class MyPartitioner extends Partitioner<MyKey, Text> {
 	@Override
-	public int getPartition(Text key, Text value, int numPartitions) {
-		int c = Character.toLowerCase(key.toString().charAt(0));
+	public int getPartition(MyKey key, Text value, int numPartitions) {
+		
+		int splitIndex = key.term.toString().indexOf(":");
+		String Tag=key.term.toString().substring(0,splitIndex);
+		if(Tag.equals("TF")) {
+		int c = Character.toLowerCase(key.term.toString().charAt(3));
 		if (c < 'a' || c > 'z')
 			return numPartitions - 1;
 		return (int)Math.floor((float)(numPartitions - 2) * (c-'a')/('z'-'a'));
 	}
+		
+		else
+		{
+			return(key.term.hashCode() & Integer.MAX_VALUE)%numPartitions;// default
+		}
+}
 }
