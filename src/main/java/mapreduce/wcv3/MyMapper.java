@@ -51,16 +51,16 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 			//System.out.println(line);
 			int sep = word.indexOf(' ');
 			if(!CheckStopwords(word)){
-			this._key.set((sep == -1) ? "TF:"+word+","+ key.toString(): "TF:"+word.substring(0, word.indexOf(' '))+","+ key.toString());// a tag is added to the key to differentiate between 2 key-value pairs 
+			word=(sep == -1) ? word: word.substring(0, word.indexOf(' '));// a tag is added to the key to differentiate between 2 key-value pairs 
 			
 			this._value.set("1");
-			MyKey compositeKey1= new MyKey(_key.toString(),_value.toString());
-			context.write(compositeKey1, new Text());
+			MyKey compositeKey1= new MyKey("TF",word,key.toString(),"1");
+			context.write(compositeKey1, _value);
 			//context.write(this._key, this._value);// emit first k-value pair ({TF:term,doc_id}, 1)
-			this._key2.set("L:"+key.toString().toString()); // document id with L tag to differentiate between 2 k-value pairs
+			//this._key2.set("L:"+key.toString().toString()); // document id with L tag to differentiate between 2 k-value pairs
 			this._value2.set("1");// 
-			MyKey compositeKey2= new MyKey(_key2.toString(),_value2.toString());
-			context.write(compositeKey2, new Text());
+			MyKey compositeKey2= new MyKey("L",key.toString(),key.toString(),"1");
+			context.write(compositeKey2, _value2);
 			//context.write(this._key2, this._value2);// emit the second k-value pair ({L:doc_id},1)// i did this so the combiner can deal with all situation
 			
 			//context.getCounter(Counters.NUM_LINES).increment(1);

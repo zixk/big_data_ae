@@ -41,7 +41,10 @@ public class WordCount extends Configured implements Tool {
 		FileOutputFormat.setOutputPath(job, new Path(job.getJobName() +"_output"));
 		MultipleOutputs.addNamedOutput(job, "Termfrequency", TextOutputFormat.class, Text.class, Text.class);
 	    MultipleOutputs.addNamedOutput(job, "Documentlength", TextOutputFormat.class, Text.class, Text.class);
-		return job.waitForCompletion(true) ? 0 : 1;
+		int i= job.waitForCompletion(true) ? 0 : 1;
+		if(i==0)
+			System.out.print(job.getCounters());
+		return i;
 	}
 
 	public static void main(String[] args) throws Exception {

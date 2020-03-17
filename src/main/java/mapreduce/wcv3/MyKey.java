@@ -16,35 +16,42 @@ public class MyKey implements WritableComparable<MyKey> {
 	 *
 	 */
 	
-
+		public String tag;
 		public String term;
+		public String docid;
 		public String frequency;
 		
 
 		public MyKey() {
 		}
 
-		public MyKey(String term, String frequency) {
+		public MyKey(String tag,String term, String docid,String frequency) {
 			super();
-			this.set(term, frequency);
+			this.set(tag,term,docid, frequency);
 		}
 
-		public void set(String term, String frequenc) {
+		public void set(String tag,String term, String docid,String frequency) {
+			this.tag = (tag == null) ? "" : tag;
 			this.term = (term == null) ? "" : term;
+			this.docid = (docid == null) ? "" : docid;
 			this.frequency = (frequency == null) ? "" : frequency;
 			
 		}
 
 		@Override
 		public void write(DataOutput out) throws IOException {
+			out.writeUTF(tag);
 			out.writeUTF(term);
+			out.writeUTF(docid);
 			out.writeUTF(frequency);
 			
 		}
 
 		@Override
 		public void readFields(DataInput in) throws IOException {
+			tag = in.readUTF();
 			term = in.readUTF();
+			docid = in.readUTF();
 			frequency = in.readUTF();
 			
 		}
@@ -56,12 +63,12 @@ public class MyKey implements WritableComparable<MyKey> {
 				return termCmp;
 			} else {
 				
-				int splitIndex1 = frequency.toString().indexOf(":");
-				Integer termFrequency1= Integer.parseInt(frequency.toString().substring(splitIndex1+1));// extract the number (12) from the value for example: docid:12  
-				int splitIndex2 = o.frequency.toString().indexOf(":");
-				Integer termFrequency2= Integer.parseInt(o.frequency.toString().substring(splitIndex1+1));
+				//int splitIndex1 = frequency.toString().indexOf(":");
+				//Integer termFrequency1= Integer.parseInt(frequency.toString().substring(splitIndex1+1));// extract the number (12) from the value for example: docid:12  
+				//int splitIndex2 = o.frequency.toString().indexOf(":");
+				//Integer termFrequency2= Integer.parseInt(o.frequency.toString().substring(splitIndex1+1));
 				
-				int frequencyCmp = termFrequency1.compareTo(termFrequency1); // second ordering by value
+				int frequencyCmp = frequency.compareTo(o.frequency); // second ordering by value
 				if (frequencyCmp != 0) {
 					return (-1 * frequencyCmp); // descending order
 				} 

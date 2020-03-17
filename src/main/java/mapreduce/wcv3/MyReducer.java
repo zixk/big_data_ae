@@ -20,18 +20,18 @@ public class MyReducer extends Reducer<MyKey, Text, Text, Text> {
 	@Override
 	protected void reduce(MyKey key, Iterable<Text> values, Context
 			context) throws IOException, InterruptedException {
-		int splitIndex = key.term.toString().indexOf(":");
-		String Tag=key.toString().substring(0,splitIndex);
+		//int splitIndex = key.term.toString().indexOf(":");
+		//String Tag=key.toString().substring(0,splitIndex);
 		
 	    
 		
-		if(Tag.equals("L")) {
+		if(key.tag.equals("L")) {
 		
 		
-		output_files.write("Documentlength",new Text(key.term), new Text(key.frequency));
+		output_files.write("Documentlength",new Text(key.docid), new Text(key.frequency));
 	}
 		
-		if(Tag.equals("TF")) {
+		if(key.tag.equals("TF")) {
 			
 			//input：<"TF:term",list("doc_id:1","doc_id:1","doc_id:1")>
 			//output：<"TF:term","doc_id:1,doc_id:1,doc_id:1">
