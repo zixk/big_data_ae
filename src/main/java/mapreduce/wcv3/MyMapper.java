@@ -62,14 +62,14 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 			MyKey compositeKey2= new MyKey("L",key.toString(),key.toString(),"1");
 			context.write(compositeKey2, _value2);
 			//context.write(this._key2, this._value2);// emit the second k-value pair ({L:doc_id},1)// i did this so the combiner can deal with all situation
-			
+			//System.out.println(compositeKey2.docid);
 			//context.getCounter(Counters.NUM_LINES).increment(1);
 			}
 		}
 		
 		//context.getCounter(Counters.NUM_BYTES).increment(value.getLength());
-		context.getCounter(Counters.NUM_RECORDS).increment(1);
-		System.out.println(context.getCounter(Counters.NUM_RECORDS).getValue());
+		//context.getCounter(Counters.NUM_RECORDS).increment(1);
+		//System.out.println(context.getCounter(Counters.NUM_RECORDS).getValue());
 	}
 	
 	private void loadStopwords() throws IOException{

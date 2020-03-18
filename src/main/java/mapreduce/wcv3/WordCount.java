@@ -35,7 +35,8 @@ public class WordCount extends Configured implements Tool {
 		job.setMapOutputKeyClass(MyKey.class);
 		job.setMapOutputValueClass(Text.class);
 		job.setReducerClass(MyReducer.class);
-		job.setCombinerClass(MyCombiner.class);
+		//job.setCombinerClass(MyCombiner.class);
+		job.setSortComparatorClass(MYSortComparator.class);
 		job.setGroupingComparatorClass(MyGroupComparator.class);
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(job.getJobName() +"_output"));
@@ -43,6 +44,7 @@ public class WordCount extends Configured implements Tool {
 	    MultipleOutputs.addNamedOutput(job, "Documentlength", TextOutputFormat.class, Text.class, Text.class);
 		int i= job.waitForCompletion(true) ? 0 : 1;
 		if(i==0)
+			
 			System.out.print(job.getCounters());
 		return i;
 	}

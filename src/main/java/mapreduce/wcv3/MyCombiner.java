@@ -23,6 +23,7 @@ public  class MyCombiner extends Reducer<MyKey, Text, MyKey, Text>{
 		for(Text value : values){
 			
 			sum += Integer.parseInt(value.toString());
+			
 		}
 		
 		//int splitIndex2 = key.term.toString().indexOf(",");
@@ -31,6 +32,7 @@ public  class MyCombiner extends Reducer<MyKey, Text, MyKey, Text>{
 		//MyKey compositeKey= new MyKey(key.term.toString().substring(0,splitIndex2),new_value.toString());
 		key.frequency= String.valueOf(sum);
 		context.write(key, new Text());
+		
          //output:<key,value>----<"term","docId:sum">
 	}
 		
@@ -40,11 +42,13 @@ public  class MyCombiner extends Reducer<MyKey, Text, MyKey, Text>{
 			for(Text value : values){
 				
 				sum += Integer.parseInt(value.toString());
+				
 			}
 			
 			//MyKey compositeKey= new MyKey(key.term.toString(),Integer.toString(sum));
 			key.frequency=String.valueOf(sum);
 			context.write(key, new Text());
+			
 		}
 }
 }

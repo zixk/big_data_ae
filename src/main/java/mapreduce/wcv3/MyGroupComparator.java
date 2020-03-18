@@ -19,7 +19,7 @@ public class MyGroupComparator extends WritableComparator {
 	        
 	        MyKey key1 = (MyKey) wc1;
 	        MyKey key2 = (MyKey) wc2;
-	        return key1.term.compareTo(key2.term);
+	        return key1.term.compareTo(key2.term);// & key1.docid.compareTo(key2.docid) ;
 	    }
 	}
 
