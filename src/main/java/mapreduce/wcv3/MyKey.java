@@ -58,25 +58,17 @@ public class MyKey implements WritableComparable<MyKey> {
 
 		@Override
 		public int compareTo(MyKey o) {
-			int termCmp = term.toLowerCase().compareTo(o.term.toLowerCase());// first, ordering by term 
-			if (termCmp != 0) {
-				return termCmp;
-			} else {
-				
-				//int splitIndex1 = frequency.toString().indexOf(":");
-				//Integer termFrequency1= Integer.parseInt(frequency.toString().substring(splitIndex1+1));// extract the number (12) from the value for example: docid:12  
-				//int splitIndex2 = o.frequency.toString().indexOf(":");
-				//Integer termFrequency2= Integer.parseInt(o.frequency.toString().substring(splitIndex1+1));
-				
-				int frequencyCmp = frequency.compareTo(o.frequency); // second ordering by value
-				if (frequencyCmp != 0) {
-					return (-1 * frequencyCmp); // descending order
-				} 
-			}
+			int termCmp = term.toLowerCase().compareTo(o.term.toLowerCase());
 			
-			return 0;
+			if (termCmp != 0  ) {
+				return termCmp;
+			
 		}
+			
+				return 0;//this.docid.compareTo(o.docid);	
+		}
+}
 
-	}
+	
 
 

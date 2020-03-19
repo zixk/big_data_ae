@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import com.clearspring.analytics.stream.membership.DataOutputBuffer;
 
 public class MyRecordReader extends RecordReader<LongWritable, Text> {
-	private static final byte[] recordSeparator = "\n[[".getBytes();
+	private static final byte[] recordSeparator = "[[".getBytes();
 	private FSDataInputStream fsin;
 	private long start, end;
 	private boolean stillInChunk = true;

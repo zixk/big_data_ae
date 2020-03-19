@@ -1,6 +1,7 @@
 package mapreduce.wcv3;
 
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -13,19 +14,22 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import utils.PorterStemmer;
+import java.util.HashMap;
 
-public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accepts LongWritable, Text, and outputs Text, Text
-	static enum Counters { NUM_RECORDS, NUM_LINES, NUM_BYTES }
+public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accepts LongWritable, Text, and outputs MyKey, Text
+	//static enum Counters { NUM_RECORDS, NUM_LINES, NUM_BYTES }
+	
 	private Text _key = new Text();
-	private Text _value = new Text();
+	private Text _value = new Text();// first k-value pair
 	
 	private Text _key2 = new Text();
 	private Text _value2 = new Text();// the second k-value pair
 	
-	private static List<String> stopwords;
+	private static List<String> stopwords; // to load all stopwords 
 	
 	
-   private PorterStemmer stemmer = new PorterStemmer();
+   private PorterStemmer stemmer = new PorterStemmer(); // stemming the words
+   
    public static boolean CheckStopwords(String word) throws IOException {
 			
 		return stopwords.contains(word);
@@ -35,6 +39,10 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws
 	IOException, InterruptedException {
+		
+		   HashMap<String, Integer> Term_frequency = new HashMap<String, Integer>(); // to store each term in the document with its frequency
+
+		
 		loadStopwords();
 		String valueAsString = value.toString().toLowerCase();
 		valueAsString = valueAsString.replaceAll("[^a-zA-Z0-9\\s]", " ");
@@ -43,33 +51,43 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 		StringTokenizer tokenizer = new StringTokenizer(valueAsString.toString(), " "); // tokenize inputsplit by a space delimeter
 		
 		while (tokenizer.hasMoreTokens()) {
-			String word = tokenizer.nextToken(); // grab the first token
-			//line=stemmer.stem(line).toLowerCase(); // lowercase all text in inputsplit
-			//word = word.replaceAll("[^a-zA-Z0-9\\s]", ""); // removes all special characters and punctuation marks
-			//word = word.replaceAll("\n", "");
-			//line = removeStopwords(line); // stopword removal and stemming
-			//System.out.println(line);
-			int sep = word.indexOf(' ');
-			if(!CheckStopwords(word)){
-			word=(sep == -1) ? word: word.substring(0, word.indexOf(' '));// a tag is added to the key to differentiate between 2 key-value pairs 
 			
-			this._value.set("1");
-			MyKey compositeKey1= new MyKey("TF",word,key.toString(),"1");
-			context.write(compositeKey1, _value);
-			//context.write(this._key, this._value);// emit first k-value pair ({TF:term,doc_id}, 1)
-			//this._key2.set("L:"+key.toString().toString()); // document id with L tag to differentiate between 2 k-value pairs
-			this._value2.set("1");// 
-			MyKey compositeKey2= new MyKey("L",key.toString(),key.toString(),"1");
-			context.write(compositeKey2, _value2);
-			//context.write(this._key2, this._value2);// emit the second k-value pair ({L:doc_id},1)// i did this so the combiner can deal with all situation
-			//System.out.println(compositeKey2.docid);
-			//context.getCounter(Counters.NUM_LINES).increment(1);
+			String word = tokenizer.nextToken(); // grab the first token
+			
+			int sep = word.indexOf(' '); 
+			if(!CheckStopwords(word)){
+			word=(sep == -1) ? word: word.substring(0, word.indexOf(' '));
+			
+			if(!Term_frequency.containsKey(word))  // adding the word with frequency 1 if it is not  in the hashmap
+				Term_frequency.put(word, 1);
+			else
+			{
+				int new_value=Term_frequency.get(word)+1;  // if it is already in the hashmap, retrieve the value, increment by 1, store the new frequency
+				Term_frequency.replace(word,new_value );
+			}	
+			
+			
+			
 			}
 		}
 		
-		//context.getCounter(Counters.NUM_BYTES).increment(value.getLength());
-		//context.getCounter(Counters.NUM_RECORDS).increment(1);
-		//System.out.println(context.getCounter(Counters.NUM_RECORDS).getValue());
+		for (String term : Term_frequency.keySet())
+		{
+			MyKey compositeKey1= new MyKey("TF",term,key.toString(),Term_frequency.get(term).toString()); // emitting each term with its frequency
+			context.write(compositeKey1, new Text());													  // e.g. (TF,book,docid,25,null)
+		}
+		
+		
+		
+		MyKey compositeKey2= new MyKey("L",key.toString(),key.toString(),Integer.toString(Term_frequency.size())); // emitting docid with its length which is equal to the size of the hashmap
+		context.write(compositeKey2, new Text());
+		 System.out.println("mapper");
+		 for(String i :Term_frequency.keySet())
+		 {
+		 System.out.println("Key: "+i+" value: "+Term_frequency.get(i)+" docid :"+key);
+		 }
+			 
+		
 	}
 	
 	private void loadStopwords() throws IOException{

@@ -21,14 +21,11 @@ public class MYSortComparator extends WritableComparator{
 				return termCmp;
 			} else {
 				
-				//int splitIndex1 = frequency.toString().indexOf(":");
-				//Integer termFrequency1= Integer.parseInt(frequency.toString().substring(splitIndex1+1));// extract the number (12) from the value for example: docid:12  
-				//int splitIndex2 = o.frequency.toString().indexOf(":");
-				//Integer termFrequency2= Integer.parseInt(o.frequency.toString().substring(splitIndex1+1));
+				
 				
 				int frequencyCmp = key1.frequency.compareTo(key2.frequency); // second ordering by value
 				if (frequencyCmp != 0) {
-					return (-1 * frequencyCmp); // descending order
+					return ( -1*frequencyCmp); // descending order
 				} 
 			}
 			
