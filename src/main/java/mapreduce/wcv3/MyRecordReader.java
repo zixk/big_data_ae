@@ -31,7 +31,7 @@ public class MyRecordReader extends RecordReader<LongWritable, Text> {
 		FileSystem fs = path.getFileSystem(conf);
 
 		this.fsin = fs.open(path);
-		fs.close();
+		//fs.close();
 		this.start = split.getStart();
 		this.end = split.getStart() + split.getLength();
 		this.fsin.seek(this.start);
