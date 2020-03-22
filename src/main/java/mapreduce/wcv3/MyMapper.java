@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.net.URI; 
+import java.util.logging.Logger;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -30,6 +31,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	private Text _key2 = new Text();
 	private Text _value2 = new Text();// the second k-value pair
 	
+	private final static Logger log = Logger.getLogger("myMapper");
 	private static List<String> stopwords; // to load all stopwords 
 	
 	
@@ -43,9 +45,11 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
      {
        try
        {
+    	 List<String> stopwords = new ArrayList<String>();
          BufferedReader reader = new BufferedReader(new FileReader("stopwords"));
          String word = null;
          while( (word = reader.readLine()) != null) {
+        	 log.info("WORD - " + word);
              stopwords.add(word.trim());
              }
          reader.close();
