@@ -29,7 +29,7 @@ public class WordCount extends Configured implements Tool {
 		Job job = Job.getInstance(myconf);
 		FileSystem fs = FileSystem.get(myconf);
 		fs.copyFromLocalFile(new Path("file:///users/level5/2144751b/uog-bigdata/src/main/resources/stopword-list.txt"), 
-				new Path("hdfs://ideasup.dcs.gla.ac.uk:8020/user/2144751b/stopword-list.txt"));
+				new Path("hdfs://bigdata-10.dcs.gla.ac.uk:8020/user/2144751b/stopword-list.txt"));
 		job.setJobName("Indexer");
 		job.setJarByClass(WordCount.class);
 		job.setInputFormatClass(MyInputFormat.class);
