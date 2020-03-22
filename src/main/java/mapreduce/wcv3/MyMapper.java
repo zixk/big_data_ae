@@ -97,7 +97,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	
 	private void loadStopwords() throws IOException{
 		//String stopwordsFileLocation = getClass().getClassLoader().getResource("stopword-list.txt").getPath(); // finds the path to the stopwords file in the resources folder
-		stopwords = Files.readAllLines(Paths.get("/user/2144751b/stopword-list.txt")); // reads in the stopwords into a list 
+		stopwords = Files.readAllLines(Paths.get("hdfs://bigdata-10.dcs.gla.ac.uk:8020/user/2144751b/stopword-list.txt")); // reads in the stopwords into a list 
 	}
 	
 	private String removeStopwords(String original) {
