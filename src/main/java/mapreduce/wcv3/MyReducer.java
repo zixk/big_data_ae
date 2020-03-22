@@ -24,7 +24,7 @@ public class MyReducer extends Reducer<MyKey, Text, Text, Text> {
 		if(key.tag.equals("TF")) {
 			for(Text v:values)
 			{
-			System.out.println("key:"+key.term+" : docid :"+key.docid+ " : "+"termfre: "+key.frequency);
+			//System.out.println("key:"+key.term+" : docid :"+key.docid+ " : "+"termfre: "+key.frequency);
 			output_files.write("Termfrequency",new Text(key.term+" : "+key.docid+ " : "), new Text(key.frequency));
 			
 	         //output:term : docid : frequency 
