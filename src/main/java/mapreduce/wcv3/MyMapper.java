@@ -35,30 +35,6 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	
    private PorterStemmer stemmer = new PorterStemmer(); // stemming the words
    
-   public void setup(Context context) throws IOException,  
-   InterruptedException {
-	   String line = ""; 
-	   
-	   FileSystem fs = FileSystem.get(context.getConfiguration()); 
-	   URI[] cacheFiles = context.getCacheFiles(); 
-	   Path getFilePath = new Path(cacheFiles[0].toString()); 
-	   
-	   BufferedReader reader = new BufferedReader(new InputStreamReader(fs.open(getFilePath))); 
-	   
-       while ((line = reader.readLine()) != null)  
-       { 
-           String[] words = line.split("\n"); 
-
-           for (int i = 0; i < words.length; i++)  
-           { 
-               // add the words to ArrayList 
-               stopwords.add(words[i]);  
-           } 
-       } 
-   } 
-	  
-   
-   
    public static boolean CheckStopwords(String word) throws IOException {
 			
 		return stopwords.contains(word);
@@ -72,7 +48,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 		   HashMap<String, Integer> Term_frequency = new HashMap<String, Integer>(); // to store each term in the document with its frequency
 
 		
-		//loadStopwords();
+		loadStopwords();
 		String valueAsString = value.toString().toLowerCase();
 		valueAsString = valueAsString.replaceAll("[^a-zA-Z0-9\\s]", " ");
 		valueAsString = valueAsString.replaceAll("\n", " ");
@@ -121,7 +97,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	
 	private void loadStopwords() throws IOException{
 		//String stopwordsFileLocation = getClass().getClassLoader().getResource("stopword-list.txt").getPath(); // finds the path to the stopwords file in the resources folder
-		//stopwords = Files.readAllLines(Paths.get(stopwordsFileLocation)); // reads in the stopwords into a list 
+		stopwords = Files.readAllLines(Paths.get("/user/2144751b/stopword-list.txt")); // reads in the stopwords into a list 
 	}
 	
 	private String removeStopwords(String original) {
