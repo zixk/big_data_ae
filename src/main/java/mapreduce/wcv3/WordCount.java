@@ -2,6 +2,7 @@ package mapreduce.wcv3;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -22,10 +23,13 @@ public class WordCount extends Configured implements Tool {
 		// mode. In this mode, mappers/reducers are spawned as thread on the
 		// local machine, and all URLs are mapped to files in the local disk.
 		// Remove these lines when executing your code against the cluster.
-		myconf.set("mapreduce.framework.name", "local");
-        myconf.set("fs.defaultFS", "file:///");
+		//myconf.set("mapreduce.framework.name", "local");
+        //myconf.set("fs.defaultFS", "file:///");
         myconf.set("textinputformat.record.delimiter", "\n[[");
 		Job job = Job.getInstance(myconf);
+		FileSystem fs = FileSystem.get(myconf);
+		fs.copyFromLocalFile(new Path("file:///users/level5/2144751b/uog-bigdata/src/main/resources/stopword-list.txt"), 
+				new Path("hdfs://ideasup.dcs.gla.ac.uk:8020/user/2144751b/stopword-list.txt"));
 		job.setJobName("Indexer");
 		job.setJarByClass(WordCount.class);
 		job.setInputFormatClass(MyInputFormat.class);
