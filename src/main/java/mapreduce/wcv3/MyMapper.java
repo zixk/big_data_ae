@@ -35,6 +35,31 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	
    private PorterStemmer stemmer = new PorterStemmer(); // stemming the words
    
+   @Override
+   public void setup(Context context) throws IOException, InterruptedException
+   {
+     URI[] cacheFiles = context.getCacheFiles();
+     if (cacheFiles != null && cacheFiles.length > 0)
+     {
+       try
+       {
+         BufferedReader reader = new BufferedReader(new FileReader("stopwords"));
+         String word = null;
+         while( (word = reader.readLine()) != null) {
+             stopwords.add(word.trim());
+             }
+         reader.close();
+       }finally {
+    	   
+       }
+   }
+   }
+   
+   
+   
+   
+   
+   
    public static boolean CheckStopwords(String word) throws IOException {
 			
 		return stopwords.contains(word);
@@ -48,7 +73,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 		   HashMap<String, Integer> Term_frequency = new HashMap<String, Integer>(); // to store each term in the document with its frequency
 
 		
-		loadStopwords();
+		//loadStopwords();
 		String valueAsString = value.toString().toLowerCase();
 		valueAsString = valueAsString.replaceAll("[^a-zA-Z0-9\\s]", " ");
 		valueAsString = valueAsString.replaceAll("\n", " ");
@@ -70,9 +95,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 				int new_value=Term_frequency.get(word)+1;  // if it is already in the hashmap, retrieve the value, increment by 1, store the new frequency
 				Term_frequency.replace(word,new_value );
 			}	
-			
-			
-			
+
 			}
 		}
 		
