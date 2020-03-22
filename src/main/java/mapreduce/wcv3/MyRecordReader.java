@@ -12,8 +12,7 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-
-import com.clearspring.analytics.stream.membership.DataOutputBuffer;
+import org.apache.hadoop.io.DataOutputBuffer;
 
 public class MyRecordReader extends RecordReader<LongWritable, Text> {
 	private static final byte[] recordSeparator = "[[".getBytes();
