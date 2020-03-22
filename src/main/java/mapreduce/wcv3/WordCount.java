@@ -26,7 +26,7 @@ public class WordCount extends Configured implements Tool {
         myconf.set("fs.defaultFS", "file:///");
         myconf.set("textinputformat.record.delimiter", "\n[[");
 		Job job = Job.getInstance(myconf);
-		job.setJobName("MyWordCount(" + args[0] + ")");
+		job.setJobName("Indexer");
 		job.setJarByClass(WordCount.class);
 		job.setInputFormatClass(MyInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
