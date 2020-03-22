@@ -6,9 +6,6 @@ import java.io.*;
 import java.util.*; 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
 import java.net.URI; 
 import java.util.logging.Logger;
 
@@ -20,7 +17,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.FileSystem; 
 
 import utils.PorterStemmer;
-import java.util.HashMap;
 
 public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accepts LongWritable, Text, and outputs MyKey, Text
 	//static enum Counters { NUM_RECORDS, NUM_LINES, NUM_BYTES }
@@ -32,7 +28,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
 	private Text _value2 = new Text();// the second k-value pair
 	
 	private final static Logger log = Logger.getLogger("myMapper");
-	private static List<String> stopwords; // to load all stopwords 
+	private List<String> stopwords = new ArrayList<String>(); // to load all stopwords 
 	
 	
    private PorterStemmer stemmer = new PorterStemmer(); // stemming the words
@@ -64,7 +60,7 @@ public class MyMapper extends Mapper<LongWritable, Text, MyKey, Text> {// accept
    
    
    
-   public static boolean CheckStopwords(String word) throws IOException {
+   public boolean CheckStopwords(String word) throws IOException {
 			
 		return stopwords.contains(word);
 	}
