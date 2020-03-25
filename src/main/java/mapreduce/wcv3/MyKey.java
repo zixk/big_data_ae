@@ -9,6 +9,8 @@ public class MyKey implements WritableComparable<MyKey> {
 
 	/**
 	 * Creates composite key formed by a primary key(term) and a secondary key(docid, frequency)
+	 * 
+	 * https://stackoverflow.com/questions/37910096/mapreduce-composite-key-sample-doesnt-show-the-desired-output
 	 *
 	 */
 
