@@ -15,7 +15,12 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.io.DataOutputBuffer;
 
 public class MyRecordReader extends RecordReader<LongWritable, Text> {
-	private static final byte[] recordSeparator = "[[".getBytes();
+
+	/**
+	 * Separates corpus into individual articles based on '\n[[' delimiter.
+	 * These splits are then used in the MyInputFormat.java class
+	 */
+	private static final byte[] recordSeparator = "\n[[".getBytes();
 	private FSDataInputStream fsin;
 	private long start, end;
 	private boolean stillInChunk = true;
@@ -31,7 +36,7 @@ public class MyRecordReader extends RecordReader<LongWritable, Text> {
 		FileSystem fs = path.getFileSystem(conf);
 
 		this.fsin = fs.open(path);
-		//fs.close();
+		// fs.close();
 		this.start = split.getStart();
 		this.end = split.getStart() + split.getLength();
 		this.fsin.seek(this.start);
@@ -70,10 +75,14 @@ public class MyRecordReader extends RecordReader<LongWritable, Text> {
 	}
 
 	@Override
-	public LongWritable getCurrentKey() { return this.key; }
+	public LongWritable getCurrentKey() {
+		return this.key;
+	}
 
 	@Override
-	public Text getCurrentValue() { return this.value; }
+	public Text getCurrentValue() {
+		return this.value;
+	}
 
 	@Override
 	public float getProgress() throws IOException {
@@ -81,5 +90,7 @@ public class MyRecordReader extends RecordReader<LongWritable, Text> {
 	}
 
 	@Override
-	public void close() throws IOException { this.fsin.close(); }
+	public void close() throws IOException {
+		this.fsin.close();
+	}
 }

@@ -5,11 +5,15 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 
-public class CompositeKeyComperator extends WritableComparator{
+public class CompositeKeyComperator extends WritableComparator {
+	/**
+	 * This class handles the secondary sort of terms and their frequencies
+	 * 
+	 */
 	protected CompositeKeyComperator() {
 		super(Text.class, true);
 	}
-	
+
 	@Override
 	public int compare(WritableComparable w1, WritableComparable w2) {
 		Text ip1 = (Text) w1;

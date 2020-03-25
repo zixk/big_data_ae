@@ -8,47 +8,43 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import org.apache.hadoop.mapreduce.Reducer;
-public  class MyCombiner extends Reducer<MyKey, Text, MyKey, Text>{
+
+public class MyCombiner extends Reducer<MyKey, Text, MyKey, Text> {
+	/**
+	 * Combiner aggregates output from the mappers depending on if the output is the
+	 * term frequency of terms in articles or the document length
+	 * 
+	 */
 
 	private Text new_value = new Text();
+
 	@Override
-	protected void reduce(MyKey key, Iterable<Text> values,Context context)
-			throws IOException, InterruptedException {
-		//input：<key,value>---<"term:docId",list(1,1,1,1)>
-		//key="term:docId",value=list(1,1,1,1);
-		//int splitIndex = key.term.toString().indexOf(":");
-		//String Tag=key.toString().substring(0,splitIndex);
-		if(key.tag.equals("TF")) {
-		int sum = 0;
-		for(Text value : values){
-			
-			sum += Integer.parseInt(value.toString());
-			
-		}
-		
-		//int splitIndex2 = key.term.toString().indexOf(",");
-		//new_value.set(key.term.toString().substring(splitIndex2+1)+":"+sum);
-		//key.set(key.term.toString().substring(0,splitIndex2));
-		//MyKey compositeKey= new MyKey(key.term.toString().substring(0,splitIndex2),new_value.toString());
-		key.frequency= String.valueOf(sum);
-		context.write(key, new Text());
-		
-         //output:<key,value>----<"term","docId:sum">
-	}
-		
-		else
-		{
+	protected void reduce(MyKey key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+		if (key.tag.equals("TF")) {
 			int sum = 0;
-			for(Text value : values){
-				
+			for (Text value : values) {
+
 				sum += Integer.parseInt(value.toString());
-				
+
 			}
-			
-			//MyKey compositeKey= new MyKey(key.term.toString(),Integer.toString(sum));
-			key.frequency=String.valueOf(sum);
+
+			key.frequency = String.valueOf(sum);
 			context.write(key, new Text());
-			
+
+			// output:<key,value>----<"term","docId:sum">
 		}
-}
+
+		else {
+			int sum = 0;
+			for (Text value : values) {
+
+				sum += Integer.parseInt(value.toString());
+
+			}
+
+			key.frequency = String.valueOf(sum);
+			context.write(key, new Text());
+
+		}
+	}
 }

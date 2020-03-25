@@ -10,6 +10,9 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
 public class MyInputFormat extends FileInputFormat<LongWritable, Text> {
+	/**
+	 * creates a record reader based on the MyRecordReader class
+	 */
 	@Override
 	public RecordReader<LongWritable, Text> createRecordReader(InputSplit split, TaskAttemptContext context)
 			throws IOException, InterruptedException {
