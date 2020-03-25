@@ -1,4 +1,4 @@
-package mapreduce.wcv3;
+
 
 import org.apache.hadoop.io.WritableComparable;
 import java.io.DataInput;

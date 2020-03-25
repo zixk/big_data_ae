@@ -1,4 +1,4 @@
-package mapreduce.wcv3;
+
 
 import java.net.URI;
 
@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class WordCount extends Configured implements Tool {
+public class MyIndexer extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 		Configuration myconf = getConf();
@@ -30,11 +30,17 @@ public class WordCount extends Configured implements Tool {
         myconf.set("textinputformat.record.delimiter", "\n[[");
 		Job job = Job.getInstance(myconf);
 		FileSystem fs = FileSystem.get(myconf);
+		
+		//The following 3 lines, copy the stopwords.txt file over from the 
+		//local directory to the hdfs which enables us later to add this file
+		//to the Distibuted Cache. Each mapper can then access this cache when
+		//they need to load stopwords.
+		
 		fs.copyFromLocalFile(new Path("file:///users/level5/2144751b/big_data_ae/src/main/resources/stopword-list.txt"), 
 				new Path("hdfs://bigdata-10.dcs.gla.ac.uk:8020/user/2144751b/stopword-list.txt"));
 		job.addCacheFile(new URI("hdfs://bigdata-10.dcs.gla.ac.uk:8020/user/2144751b/stopword-list.txt" + "#stopwords"));
 		job.setJobName("Indexer");
-		job.setJarByClass(WordCount.class);
+		job.setJarByClass(MyIndexer.class);
 		job.setInputFormatClass(MyInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setMapperClass(MyMapper.class);
@@ -57,6 +63,6 @@ public class WordCount extends Configured implements Tool {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.exit(ToolRunner.run(new WordCount(), args));
+		System.exit(ToolRunner.run(new MyIndexer(), args));
 	}
 }
